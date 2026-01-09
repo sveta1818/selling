@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+    <title>Bought=>sold
+    </title>
+</head>
+<body>
+    <header>
+        <div>
+        <h1>Helper</h1>
+        <p>Keep truck of items you sold</p>
+        </div>
+    </header>
+    <div class="adItemTop">
+   <button class="addItemBtn" id="addItemBtn">+</button>
+   <h2>Add an item</h2>
+   </div>
+   <main class="container">
+   <form id="addItem" class="addItem" aria-label="New item">
+   
+    <div class="inputBox">
+    <!-- h4 -->
+    <input type="text" id="name" name="name" placeholder=" "  required >
+    <label for="productName" class="visually-hidden">Product name</label>
+    </div>
+    
+    <div class="inputBox">
+    <!-- p -->
+    <input type="date" id="order-date" name="order_date" placeholder=" "  required >
+     <label for="orderDate" class="visually-hidden">Order date</label>
+     </div>
+     
+     <div class="inputBox">
+     <!-- p -->
+    <input type="date" id="date-received" name="date_received"
+     placeholder=" "  required > 
+     <label for="receivedDate" class="visually-hidden">Date received</label>
+     </div>
+
+      <div class="inputBox">
+     <!-- p -->
+    <input type="date" id="shipping-date" name="shipping_date"
+     placeholder=" "  required > 
+     <label for="shippingDate" class="visually-hidden">Shipping date</label>
+     </div>
+     
+     <div class="inputBox">
+     <!-- p -->
+     <textarea id="additional-com" name="additional_com"
+     placeholder=" "></textarea>
+     <label for="comments" class="visually-hidden">Additional comments</label>
+     </div>
+     
+     <div class="inputBox fileBox">
+     <!-- img -->
+     <input type="file" id="photo" name="photos[]" accept="image/*" 
+     capture="environment" multiple>
+     <label for="photo">Upload photos</label>
+     <div id="photoPreview"></div>
+     </div>
+     
+     <div class="form-button">
+        <button type="submit" class="btnSubmit">Add an item</button>
+    </div>
+    </form>
+    
+    
+    <article>
+        <h3 id="addedItems">List of Items</h3>
+        <div id="addedItemContainer" class="addedItem">
+            <!-- Example -->
+         <!-- <div class="card">
+        
+        <div class="card-body">
+            <h4>order title</h4>
+            <p class='date ordered'>
+                order date:
+                <time datetime='.....'></time>
+            </p>
+            <p class='date received'>
+                receved date:
+                <time datetime='....'></time
+            </p>
+            <p class ='dateText'>Description</p>
+            <img src="images/signpost.jpg">
+            <button>Remove</button>
+            <button>Edit</button>
+        </div>
+      </div> -->
+        </div>
+    </article>
+   </main> 
+   <div id="imageModal" class="imageModal hidden">
+        <span class="close">&times;</span>
+        <img id="modalImg" alt="">
+    </div>
+</body>
+</html>

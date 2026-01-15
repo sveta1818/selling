@@ -69,11 +69,28 @@ const btnGallery = document.getElementById('btnGallery');
 function renderPhotoPreview(){
 photoPreview.innerHTML = '';
 selectedPhotos.forEach((src, index) =>{
+    const wrapper = document.createElement('div');
+    wrapper.className = 'previewWrapper';
     const img = document.createElement('img');
     img.src = src;
     img.alt = `Photo ${index + 1}`;
     img.className = 'previewItem';
-    photoPreview.appendChild(img);
+    
+    const removeBtn = document.createElement('button');
+    removeBtn.className = 'removePhotoBtn';
+    removeBtn.innerHTML = `<svg viewBox="0 0 24 24" width="14" height="14" fill="none"
+     xmlns="http://www.w3.org/2000/svg">
+  <path d="M6 6L18 18" stroke="white" stroke-width="2" stroke-linecap="round"/>
+  <path d="M6 18L18 6" stroke="white" stroke-width="2" stroke-linecap="round"/>
+</svg>`
+
+removeBtn.addEventListener('click', ()=>{
+    selectedPhotos.splice(index, 1);
+    renderPhotoPreview();
+})
+    wrapper.appendChild(img);
+    wrapper.appendChild(removeBtn)
+    photoPreview.appendChild(wrapper);
 
 })
 }

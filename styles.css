@@ -1,6 +1,6 @@
 html,body{
     
-    height: 100%;
+   min-height: 100%;
 }
 body{
     background-color:azure;
@@ -181,6 +181,29 @@ textarea {
     object-fit: cover;
     border: 1px solid #ccc;
 }
+.previewWrapper {
+  position: relative;
+  display: inline-block;
+  margin: 5px;
+}
+.removePhotoBtn {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: none;
+  background: #222;
+  color: white;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  display: flex;
+}
 .picContainer{
     display: flex;
     gap: 12px;
@@ -320,4 +343,28 @@ h4{
 .card.open .cardContent{
     display: block;
 }
+@media (min-width: 1024px){
+ #btnCamera {
+  display: none;
+ }
+}
+#btnCamera, #btnGallery{
+padding: 5px 10px;
+background-color: #222;
+color: azure;
+border-radius: 8px;
+margin: 0;
+border-color:#222;
+font-size: 17px;
+line-height: 1;
+border: none;
+cursor: pointer;
+transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+#btnCamera:hover, #btnGallery:hover {
+  background: #374151;
+  transform: translateY(-2px);
+}
+
+
 

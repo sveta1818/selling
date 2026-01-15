@@ -62,6 +62,10 @@ const closeImgBtn = document.querySelector('span');
 
 const photoPreview = document.getElementById('photoPreview');
 const photoInput = document.getElementById('photo');
+const photoCamera = document.getElementById('photoCamera');
+const btnCamera = document.getElementById('btnCamera');
+const btnGallery = document.getElementById('btnGallery');
+
 function renderPhotoPreview(){
 photoPreview.innerHTML = '';
 selectedPhotos.forEach((src, index) =>{
@@ -73,22 +77,36 @@ selectedPhotos.forEach((src, index) =>{
 
 })
 }
-photoInput.addEventListener('change', (e) => {
-  const files = Array.from(e.target.files);
+function handlePhotos(e) {
+    [...e.target.files].forEach(file=>{
+        const reader = new FileReader();
+        reader.onload = () => {
+            selectedPhotos.push(reader.result);
+            renderPhotoPreview();
+        };
+        reader.readAsDataURL(file);
+    });
+    e.target.value = '';
+}
+photoInput.addEventListener('change', handlePhotos);
+photoCamera.addEventListener('change', handlePhotos);
+btnCamera.onclick = () => photoCamera.click();
+btnGallery.onclick = () => photo.click();
+// photoInput.addEventListener('change', (e) => {
+//   const files = Array.from(e.target.files);
 
-  files.forEach(file => {
-    const reader = new FileReader();
+//   files.forEach(file => {
+//     const reader = new FileReader();
 
-    reader.onload = () => {
-      selectedPhotos.push(reader.result);
-      renderPhotoPreview();
-    };
+//     reader.onload = () => {
+//       selectedPhotos.push(reader.result);
+//       renderPhotoPreview();
+//     };
 
-    reader.readAsDataURL(file);
-  });
+//     reader.readAsDataURL(file);
+//   });
 
-//   photoInput.value = '';
-});
+// });
 
 
 
@@ -104,7 +122,7 @@ function handleFormSubmit(event){
     const itemDelDate = event.target.elements['date_received'].value;
     const itemShipDate = event.target.elements['shipping_date'].value;
     const additionalInfo = event.target.elements['additional_com'].value;
-    const photoInput = [...selectedPhotos];
+    const photos = [...selectedPhotos];
     if(editingId !== null){
         const item = itemList.find(el=>el.id === editingId);
         if(!item) return;
@@ -114,7 +132,7 @@ function handleFormSubmit(event){
         item.deliveryDate = itemDelDate;
         item.shipedDate = itemShipDate;
         item.additional = additionalInfo;
-        item.pic = photoInput;
+        item.pic = photos;
 
         const oldCard = document.querySelector(`.card[data-id="${editingId}"]`);
         oldCard.replaceWith(createCard(
@@ -140,7 +158,7 @@ function handleFormSubmit(event){
         deliveryDate:itemDelDate,
         shipedDate:itemShipDate,
         additional:additionalInfo,
-        pic: photoInput
+        pic: photos
        
     };
     itemList.push(newItemCard);
@@ -300,7 +318,7 @@ document.getElementById('order-date').value = nameCard.orderDate;
 document.getElementById('date-received').value = nameCard.deliveryDate;
 document.getElementById('shipping-date').value = nameCard.shipedDate;
 document.getElementById('additional-com').value = nameCard.additional;
-selectedPhotos =[...nameCard.pic];renderPhotoPreview();
+selectedPhotos =nameCard.pic ? [...nameCard.pic]: [];renderPhotoPreview();
 }
 
 
@@ -337,5 +355,3 @@ if('serviceWorker' in navigator){
     .then(()=> console.log('SW registered'))
     .catch(err => console.log('SW error', err));
 }
-
-

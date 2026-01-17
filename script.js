@@ -47,6 +47,7 @@ let editingId = null;
 let modalImages = [];
 let currentIndex = 0;
 let startX = 0;
+let endX = 0;
 
 const openForm = document.getElementById('addItemBtn');
 
@@ -348,8 +349,8 @@ closeImgBtn.addEventListener('click', ()=>{
 imageModal.addEventListener('touchstart', (e) =>{
     startX = e.touches[0].clientX;
 })
-imageModal.addEventListener('touchstart', (e) =>{
-    startX = e.changedTouches[0].clientX;
+imageModal.addEventListener('touchend', (e) =>{
+    endX = e.changedTouches[0].clientX;
     const diffX = startX - endX;
     if(Math.abs(diffX) > 50){
         if(diffX>0){
@@ -372,3 +373,4 @@ if('serviceWorker' in navigator){
     .then(()=> console.log('SW registered'))
     .catch(err => console.log('SW error', err));
 }
+

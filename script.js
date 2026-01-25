@@ -36,7 +36,7 @@ function loadItemsFromDB(){
         itemList.forEach(item =>{
             document.getElementById('addedItemContainer')
             .appendChild(createCard(item.id, item.name,
-            item.orderDate, item.deliveryDate, item.shipedDate, 
+            item.orderDate, item.orderPrice, item.deliveryDate, item.shipedDate,item.soldPrice, 
             item.additional, item.pic));
         });
     };
@@ -95,40 +95,52 @@ removeBtn.addEventListener('click', ()=>{
 
 })
 }
-function handlePhotos(e) {
-    [...e.target.files].forEach(file=>{
-        const reader = new FileReader();
-        reader.onload = () => {
-            selectedPhotos.push(reader.result);
-            renderPhotoPreview();
-        };
-        reader.readAsDataURL(file);
-    });
+//compress img:
+function compressImage(file, maxWidth = 1024, quality = 0.7) {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      const img = new Image();
+      img.src = reader.result;
+
+      img.onload = () => {
+        let { width, height } = img;
+
+        // proportions are the same:
+        if (width > maxWidth) {
+          height = height * (maxWidth / width);
+          width = maxWidth;
+        }
+
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+
+        const compressedBase64 = canvas.toDataURL('image/jpeg', quality);
+        resolve(compressedBase64);
+      };
+    };
+
+    reader.readAsDataURL(file);
+  });
+}
+async function handlePhotos(e) {
+    const files = [...e.target.files];
+    for(const file of files){
+        const compressing = await compressImage(file);
+        selectedPhotos.push(compressing);
+        renderPhotoPreview();
+    }
     e.target.value = '';
 }
 photoInput.addEventListener('change', handlePhotos);
 photoCamera.addEventListener('change', handlePhotos);
 btnCamera.onclick = () => photoCamera.click();
 btnGallery.onclick = () => photo.click();
-// photoInput.addEventListener('change', (e) => {
-//   const files = Array.from(e.target.files);
-
-//   files.forEach(file => {
-//     const reader = new FileReader();
-
-//     reader.onload = () => {
-//       selectedPhotos.push(reader.result);
-//       renderPhotoPreview();
-//     };
-
-//     reader.readAsDataURL(file);
-//   });
-
-// });
-
-
-
-//local storige saving
 
 // what happen if form will be submited
 function handleFormSubmit(event){
@@ -137,8 +149,10 @@ function handleFormSubmit(event){
 
     const itemName = event.target.elements['name'].value;
     const itemOrderdDate = event.target.elements['order_date'].value;
+    const itemOrderPrice = event.target.elements['purch_price'].value;
     const itemDelDate = event.target.elements['date_received'].value;
     const itemShipDate = event.target.elements['shipping_date'].value;
+    const itemSoldPrice = event.target.elements['sale_price'].value;
     const additionalInfo = event.target.elements['additional_com'].value;
     const photos = [...selectedPhotos];
     if(editingId !== null){
@@ -147,8 +161,10 @@ function handleFormSubmit(event){
 
         item.name = itemName;
         item.orderDate = itemOrderdDate;
+        item.orderPrice = itemOrderPrice;
         item.deliveryDate = itemDelDate;
         item.shipedDate = itemShipDate;
+        item.soldPrice = itemSoldPrice;
         item.additional = additionalInfo;
         item.pic = photos;
 
@@ -157,8 +173,10 @@ function handleFormSubmit(event){
           item.id,
           item.name,
           item.orderDate,
+          item.orderPrice,
           item.deliveryDate,
           item.shipedDate,
+          item.soldPrice,
           item.additional,
           item.pic
         )
@@ -173,8 +191,10 @@ function handleFormSubmit(event){
         id: Date.now(),//unic id for each item
         name:itemName,
         orderDate:itemOrderdDate,
+        orderPrice:itemOrderPrice,
         deliveryDate:itemDelDate,
         shipedDate:itemShipDate,
+        soldPrice:itemSoldPrice,
         additional:additionalInfo,
         pic: photos
        
@@ -182,7 +202,8 @@ function handleFormSubmit(event){
     itemList.push(newItemCard);
     saveItemToDB(newItemCard);
 document.getElementById('addedItemContainer').appendChild(createCard(newItemCard.id, newItemCard.name,
-     newItemCard.orderDate, newItemCard.deliveryDate, newItemCard.shipedDate, newItemCard.additional,
+     newItemCard.orderDate, newItemCard.orderPrice, newItemCard.deliveryDate, newItemCard.shipedDate,
+     newItemCard.soldPrice, newItemCard.additional,
      newItemCard.pic));
      clearForm();
      function saveItemToDB(item){
@@ -194,17 +215,20 @@ document.getElementById('addedItemContainer').appendChild(createCard(newItemCard
 }
 }
 // add function createCard
-function createCard(itemId, itemName, itemOrderdDate, itemDelDate, itemShipDate, additionalInfo, downloadPIc){
+function createCard(itemId, itemName, itemOrderdDate, itemOrderPrice,
+     itemDelDate, itemShipDate, itemSoldPrice, additionalInfo, downloadPIc){
     const card = document.createElement('div');
     card.className = 'card';
     card.dataset.id = itemId;
-
     const contNameBtn = document.createElement('div');
     contNameBtn.className = 'nameBtn';
     card.appendChild(contNameBtn);
    
     const itemNameTag = document.createElement('h4');
     itemNameTag.innerHTML = itemName;
+    if(itemShipDate){
+        itemNameTag.classList.add('sold');
+    }
     contNameBtn.appendChild(itemNameTag);
     itemNameTag.addEventListener('click',()=>{
         card.classList.toggle('open');
@@ -252,23 +276,53 @@ const cardContent = document.createElement('div');
 cardContent.className ='cardContent';
 card.appendChild(cardContent);
 
+const itemBoughtWith = document.createElement('div');
+itemBoughtWith.className = 'itemBougtWith';
+cardContent.appendChild(itemBoughtWith);
+
 const itemOrder = document.createElement('p');
 itemOrder.innerHTML = `Order date: ${itemOrderdDate}`;
-cardContent.appendChild(itemOrder);
+itemBoughtWith.appendChild(itemOrder);
 
-    const itemDelivery = document.createElement('p');
-    itemDelivery.innerHTML = `Delivery date: ${itemDelDate}`;
-    cardContent.appendChild(itemDelivery);
+if (itemOrderPrice !== undefined && itemOrderPrice !== null) {
+  const p = document.createElement('p');
+  p.textContent = `Purchase price: $${itemOrderPrice}`;
+  itemBoughtWith.appendChild(p);
+}
 
-    const itemShipping = document.createElement('p');
-    itemShipping.innerHTML =`Shipped date: ${itemShipDate}`;
-    cardContent.appendChild(itemShipping);
+const itemDelivery = document.createElement('p');
+itemDelivery.innerHTML = `Delivery date: ${itemDelDate}`;
+cardContent.appendChild(itemDelivery);
+
+const itemSoldWith = document.createElement('div');
+itemSoldWith.className = 'itemSoldWhith';
+cardContent.appendChild(itemSoldWith);
+
+const itemShipping = document.createElement('p');
+itemShipping.innerHTML =`Shipped date: ${itemShipDate}`;
+itemSoldWith.appendChild(itemShipping);
+
+if (itemSoldPrice !== undefined && itemSoldPrice !== null) {
+  const p = document.createElement('p');
+  p.textContent = `Sale price: $${itemSoldPrice}`;
+  itemSoldWith.appendChild(p);
+}
   
-    if(additionalInfo.length !==0){
+    if(additionalInfo && additionalInfo.length !==0){
         const addInfo = document.createElement('p');
     addInfo.className = 'additionalText';
     addInfo.innerHTML = additionalInfo;
     cardContent.appendChild(addInfo);
+    }
+
+    const order  = Number(itemOrderPrice);
+    const sale = Number(itemSoldPrice);
+    if(!isNaN(order) && !isNaN(sale)){
+        const profit = (sale - order).toFixed(2);
+        const p = document.createElement('p');
+        p.classList.add(profit>=0 ? 'profit-plus' : 'profit-minus')
+        p.textContent = `Profit: $${profit}`;
+        cardContent.appendChild(p);
     }
 
   if(downloadPIc && downloadPIc.length){
@@ -360,6 +414,9 @@ imageModal.addEventListener('touchend', (e) =>{
         }
     }
 })
+imageModal.addEventListener('click', ()=>{
+    showNextImage();
+})
 function showNextImage(){
     currentIndex = (currentIndex + 1) % modalImages.length;
     modalImage.src = modalImages[currentIndex];
@@ -368,6 +425,7 @@ function showPrewImage(){
     currentIndex = (currentIndex - 1 + modalImages.length) % modalImages.length;
     modalImage.src = modalImages[currentIndex];
 }
+
 if('serviceWorker' in navigator){
     navigator.serviceWorker.register('./sw.js')
     .then(()=> console.log('SW registered'))

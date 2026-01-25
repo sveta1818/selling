@@ -167,6 +167,7 @@ function handleFormSubmit(event){
         item.soldPrice = itemSoldPrice;
         item.additional = additionalInfo;
         item.pic = photos;
+        saveItemToDB(item);
 
         const oldCard = document.querySelector(`.card[data-id="${editingId}"]`);
         oldCard.replaceWith(createCard(
@@ -186,7 +187,7 @@ function handleFormSubmit(event){
     return;
     } else{
  
-    //for local storage(create and add):
+
     const newItemCard = {
         id: Date.now(),//unic id for each item
         name:itemName,
@@ -206,13 +207,13 @@ document.getElementById('addedItemContainer').appendChild(createCard(newItemCard
      newItemCard.soldPrice, newItemCard.additional,
      newItemCard.pic));
      clearForm();
-     function saveItemToDB(item){
+}
+    function saveItemToDB(item){
         const tx = db.transaction('itemList', 'readwrite');
     const store = tx.objectStore('itemList');
     store.put(item);
      }
-
-}
+ 
 }
 // add function createCard
 function createCard(itemId, itemName, itemOrderdDate, itemOrderPrice,
@@ -433,5 +434,6 @@ if('serviceWorker' in navigator){
     .then(()=> console.log('SW registered'))
     .catch(err => console.log('SW error', err));
 }
+
 
 

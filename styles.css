@@ -290,8 +290,14 @@ max-width: 350px;
 .nameBtn{
     display: flex;
     justify-content: space-between;
-    margin: 25px 40px;
+    gap: 12px;
+    /* margin: 25px 40px; */
     align-items: center;
+}
+.contBtn{
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0;
 }
 .removeCard, .editCard {
     width: 40px;

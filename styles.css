@@ -9,6 +9,9 @@ body{
     -webkit-font-smoothing:antialiased;
     -moz-osx-font-smoothing:grayscale;
 }
+.card {
+  padding: 16px;
+}
 header{
     background-color: black;
     color: azure;
@@ -291,6 +294,7 @@ max-width: 350px;
     display: flex;
     justify-content: space-between;
     gap: 12px;
+    padding: 16px 20px;
     /* margin: 25px 40px; */
     align-items: center;
 }
@@ -408,6 +412,7 @@ transition: transform 0.15s ease, box-shadow 0.15s ease;
   color: #8a8a8a;
   text-decoration: line-through;
 }
+
 
 
 

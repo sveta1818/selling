@@ -394,6 +394,11 @@ document.getElementById('shipping-date').value = nameCard.shipedDate;
 document.getElementById('sale-price').value = nameCard.soldPrice;
 document.getElementById('additional-com').value = nameCard.additional;
 selectedPhotos =nameCard.pic ? [...nameCard.pic]: [];renderPhotoPreview();
+
+    document.getElementById('addItem').scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+})
 }
 
 
@@ -434,6 +439,7 @@ if('serviceWorker' in navigator){
     .then(()=> console.log('SW registered'))
     .catch(err => console.log('SW error', err));
 }
+
 
 
 

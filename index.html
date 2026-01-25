@@ -18,7 +18,6 @@
         </div>
     </header>
     <div class="adItemTop">
-   <button class="addItemBtn" id="addItemBtn">+</button>
    <h2>Add an item</h2>
    </div>
    <main class="container">
@@ -30,10 +29,19 @@
     <label for="productName" class="visually-hidden">Product name</label>
     </div>
     
+    <div class="itemBoughtWith">
     <div class="inputBox">
     <!-- p -->
     <input type="date" id="order-date" name="order_date" placeholder=" "  required >
      <label for="orderDate" class="visually-hidden">Order date</label>
+     </div>
+
+     <div class="inputBox">
+     <!-- p -->
+    <input type="number" id="purch-price" name="purch_price" step="0.01"
+     placeholder=" "> 
+     <label for="purchasePrice" class="visually-hidden">Purchase price</label>
+     </div>
      </div>
      
      <div class="inputBox">
@@ -43,13 +51,21 @@
      <label for="receivedDate" class="visually-hidden">Date received</label>
      </div>
 
+<div class="itemSoldWith">
       <div class="inputBox">
      <!-- p -->
     <input type="date" id="shipping-date" name="shipping_date"
      placeholder=" "> 
      <label for="shippingDate" class="visually-hidden">Shipping date</label>
      </div>
-     
+
+     <div class="inputBox">
+     <!-- p -->
+    <input type="number" id="sale-price" name="sale_price" step="0.01"
+     placeholder=" "> 
+     <label for="salePrice" class="visually-hidden">Sale price</label>
+     </div>
+     </div>
      <div class="inputBox">
      <!-- p -->
      <textarea id="additional-com" name="additional_com"

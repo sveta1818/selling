@@ -387,8 +387,10 @@ const nameCard = itemList.find(item => item.id === editingId);
 if(!nameCard) return;
 document.getElementById('name').value = nameCard.name;
 document.getElementById('order-date').value = nameCard.orderDate;
+document.getElementById('purch-price').value = nameCard.orderPrice;
 document.getElementById('date-received').value = nameCard.deliveryDate;
 document.getElementById('shipping-date').value = nameCard.shipedDate;
+document.getElementById('sale-price').value = nameCard.soldPrice;
 document.getElementById('additional-com').value = nameCard.additional;
 selectedPhotos =nameCard.pic ? [...nameCard.pic]: [];renderPhotoPreview();
 }
@@ -431,4 +433,5 @@ if('serviceWorker' in navigator){
     .then(()=> console.log('SW registered'))
     .catch(err => console.log('SW error', err));
 }
+
 
